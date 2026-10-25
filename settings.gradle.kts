@@ -1,0 +1,1 @@
+rootProject.name = "CJY_Javafx_workspace"
