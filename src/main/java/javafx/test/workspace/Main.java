@@ -42,10 +42,10 @@ public class Main extends Application {
                 new Vector(250, 250),
                 new Vector(0, 0),
                 new Vector(0, 0),
-                0.45,
-                0.65
+                0.5,
+                0.55
         );
-        Boundary boundary = new Boundary(0, 500, 0, 500);
+        Boundary boundary = new Boundary(100, 900, 50, 700);
         Ball ballModel = new Ball(physicalStatus, boundary, 15);
 
         primaryRoot.getChildren().add(circle);

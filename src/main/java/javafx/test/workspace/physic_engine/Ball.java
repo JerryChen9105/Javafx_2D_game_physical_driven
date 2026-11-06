@@ -59,19 +59,16 @@ public class Ball {
             vel.setX(-vel.getX() * restitution);
         }
 
-        // 2. 检查右边界
         else if (pos.getX() + radius > boundary.getRightBound()) {
             pos.setX(boundary.getRightBound() - radius);
             vel.setX(-vel.getX() * restitution);
         }
 
-        // 3. 检查上边界
         if (pos.getY() - radius < boundary.getTopBound()) {
             pos.setY(boundary.getTopBound() + radius);
             vel.setY(-vel.getY() * restitution);
         }
 
-        // 4. 检查下边界
         else if (pos.getY() + radius > boundary.getBottomBound()) {
             pos.setY(boundary.getBottomBound() - radius);
             vel.setY(-vel.getY() * restitution);
