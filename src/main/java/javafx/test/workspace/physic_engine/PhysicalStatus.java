@@ -3,29 +3,29 @@ package javafx.test.workspace.physic_engine;
 public class PhysicalStatus {
 
     // variables
-    private double weight;
+    private double mass;
     private Vector pos, velocity, acceleration;
-    private double frictionCoefficient;
+    private double friction;
     private double restitution;
 
 
 
     // constructor
-    public PhysicalStatus(double weight, Vector pos, Vector velocity, Vector acceleration,
-                          double frictionCoefficient, double restitution) {
-        this.weight = weight;
+    public PhysicalStatus(double mass, Vector pos, Vector velocity, Vector acceleration,
+                          double friction, double restitution) {
+        this.mass = mass;
         this.pos = pos;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.frictionCoefficient = frictionCoefficient;
+        this.friction = friction;
         this.restitution = restitution;
     }
 
 
 
     // getter
-    public double getWeight() {
-        return weight;
+    public double getMass() {
+        return mass;
     }
 
     public Vector getPos() {
@@ -41,7 +41,7 @@ public class PhysicalStatus {
     }
 
     public double getFrictionCoefficient() {
-        return frictionCoefficient;
+        return friction;
     }
 
     public double getRestitution() {
@@ -51,8 +51,8 @@ public class PhysicalStatus {
 
 
     // setter
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setMass(double mass) {
+        this.mass = mass;
     }
 
     public void setPos(Vector pos) {
@@ -67,8 +67,8 @@ public class PhysicalStatus {
         this.acceleration = acceleration;
     }
 
-    public void setFrictionCoefficient(double frictionCoefficient) {
-        this.frictionCoefficient = frictionCoefficient;
+    public void setFrictionCoefficient(double friction) {
+        this.friction = friction;
     }
 
     public void setRestitution(double restitution) {
@@ -79,8 +79,8 @@ public class PhysicalStatus {
 
     // Newton's law of motion
     public void applyForce(Vector force) {
-        double ax = force.getX() / this.weight;
-        double ay = force.getY() / this.weight;
+        double ax = force.getX() / this.mass;
+        double ay = force.getY() / this.mass;
 
         this.acceleration.setXY(this.acceleration.getX() + ax, this.acceleration.getY() + ay);
     }
@@ -89,11 +89,11 @@ public class PhysicalStatus {
         if (this.velocity.getLen() > 0) {
             Vector oppositeDirection = this.velocity.normalize().multiply(-1);
 
-            double frictionMagnitude = this.frictionCoefficient * this.weight * PhysicsConstant.g;
+            double frictionMagnitude = this.friction * this.mass * PhysicsConstant.g;
             Vector frictionForce = oppositeDirection.multiply(frictionMagnitude);
 
             double speed = this.velocity.getLen();
-            double deceleration = (frictionMagnitude / this.weight);
+            double deceleration = (frictionMagnitude / this.mass);
 
             this.applyForce(frictionForce);
         }

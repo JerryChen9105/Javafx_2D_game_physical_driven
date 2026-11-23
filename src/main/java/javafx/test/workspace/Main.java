@@ -2,22 +2,113 @@ package javafx.test.workspace;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.test.workspace.physic_engine.Ball;
-import javafx.test.workspace.physic_engine.Boundary;
+import javafx.test.workspace.physic_model.entity.Ball;
+import javafx.test.workspace.physic_model.entity.Entity;
+import javafx.test.workspace.physic_model.obstacle.Boundary;
 import javafx.test.workspace.physic_engine.PhysicalStatus;
 import javafx.test.workspace.physic_engine.Vector;
 
-import java.lang.classfile.attribute.RuntimeInvisibleAnnotationsAttribute;
 
+
+public class Main extends Application {
+
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        Group primaryRoot = new Group();
+
+        Circle circle = new Circle(15, Paint.valueOf("red"));
+        circle.setCenterX(250);
+        circle.setCenterY(250);
+
+        PhysicalStatus physicalStatus = new PhysicalStatus(
+                5,
+                new Vector(250, 250),
+                new Vector(0, 0),
+                new Vector(0, 0),
+                0.5,
+                0.55
+        );
+        Boundary boundary = new Boundary(100, 900, 50, 700);
+        Entity ballModel = new Ball(physicalStatus, boundary, 15);
+
+
+        Rectangle lb = new Rectangle(10, 1000);
+        lb.setFill(Paint.valueOf("black"));
+        lb.setX(100 - 10);
+
+        Rectangle rb = new Rectangle(10, 1000);
+        rb.setFill(Paint.valueOf("black"));
+        rb.setX(900);
+
+        Rectangle tb = new Rectangle(1200, 10);
+        tb.setFill(Paint.valueOf("black"));
+        tb.setY(50 - 10);
+
+        Rectangle bb = new Rectangle(1200, 10);
+        bb.setFill(Paint.valueOf("black"));
+        bb.setY(700);
+
+
+        primaryRoot.getChildren().addAll(
+                circle,
+                lb, rb, tb, bb
+        );
+        Scene scene = new Scene(primaryRoot);
+
+
+
+        GameTickSystem tickSystem = new GameTickSystem(
+                ballModel,
+                () -> {circle.setCenterX(ballModel.getStatus().getPos().getX());
+                    circle.setCenterY(ballModel.getStatus().getPos().getY());},
+                1000
+        );
+
+
+        scene.setOnKeyPressed(press -> {
+            switch (press.getCode()) {
+                case UP -> tickSystem.setUpPressed(true);
+                case DOWN -> tickSystem.setDownPressed(true);
+                case LEFT -> tickSystem.setLeftPressed(true);
+                case RIGHT -> tickSystem.setRightPressed(true);
+                case ENTER -> tickSystem.startGameTick();
+                case ESCAPE -> tickSystem.stopGameTick();
+            }
+        });
+        scene.setOnKeyReleased(release -> {
+            switch (release.getCode()) {
+                case UP -> tickSystem.setUpPressed(false);
+                case DOWN -> tickSystem.setDownPressed(false);
+                case LEFT -> tickSystem.setLeftPressed(false);
+                case RIGHT -> tickSystem.setRightPressed(false);
+            }
+        });
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("2D Physical simulation Engine");
+        primaryStage.setWidth(500);
+        primaryStage.setHeight(500);
+        primaryStage.show();
+
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+}
+
+
+/*
 
 public class Main extends Application {
 
@@ -33,7 +124,7 @@ public class Main extends Application {
 
         Group primaryRoot = new Group();
 
-        Circle circle = new Circle(15, Paint.valueOf("black"));
+        Circle circle = new Circle(15, Paint.valueOf("red"));
         circle.setCenterX(250);
         circle.setCenterY(250);
 
@@ -46,10 +137,32 @@ public class Main extends Application {
                 0.55
         );
         Boundary boundary = new Boundary(100, 900, 50, 700);
-        Ball ballModel = new Ball(physicalStatus, boundary, 15);
+        Entity ballModel = new Ball(physicalStatus, boundary, 15);
 
-        primaryRoot.getChildren().add(circle);
+
+        Rectangle lb = new Rectangle(10, 1000);
+        lb.setFill(Paint.valueOf("black"));
+        lb.setX(100 - 10);
+
+        Rectangle rb = new Rectangle(10, 1000);
+        rb.setFill(Paint.valueOf("black"));
+        rb.setX(900);
+
+        Rectangle tb = new Rectangle(1200, 10);
+        tb.setFill(Paint.valueOf("black"));
+        tb.setY(50 - 10);
+
+        Rectangle bb = new Rectangle(1200, 10);
+        bb.setFill(Paint.valueOf("black"));
+        bb.setY(700);
+
+
+        primaryRoot.getChildren().addAll(
+                circle,
+                lb, rb, tb, bb
+        );
         Scene scene = new Scene(primaryRoot);
+
 
         scene.setOnKeyPressed(press -> {
             switch (press.getCode()) {
@@ -59,7 +172,6 @@ public class Main extends Application {
                 case RIGHT -> rightPressed = true;
             }
         });
-
         scene.setOnKeyReleased(release -> {
             switch (release.getCode()) {
                 case UP -> upPressed = false;
@@ -80,28 +192,28 @@ public class Main extends Application {
                     return;
                 }
 
-                double deltaTime = (now - lastTime) / 1_000_000_000.0;
+                double deltaTime = (now - lastTime) / 500_000_000.0;
                 lastTime = now;
 
                 double pushForce = 1500.0;
-                if (upPressed) ballModel.getBallStatus().applyForce(new Vector(0, -pushForce));
-                if (downPressed) ballModel.getBallStatus().applyForce(new Vector(0, pushForce));
-                if (leftPressed) ballModel.getBallStatus().applyForce(new Vector(-pushForce, 0));
-                if (rightPressed) ballModel.getBallStatus().applyForce(new Vector(pushForce, 0));
+                if (upPressed) ballModel.getStatus().applyForce(new Vector(0, -pushForce));
+                if (downPressed) ballModel.getStatus().applyForce(new Vector(0, pushForce));
+                if (leftPressed) ballModel.getStatus().applyForce(new Vector(-pushForce, 0));
+                if (rightPressed) ballModel.getStatus().applyForce(new Vector(pushForce, 0));
 
-                ballModel.getBallStatus().update(deltaTime);
+                ballModel.getStatus().update(deltaTime);
 
                 ballModel.resolveBoundaryCollision();
 
 
-                circle.setCenterX(ballModel.getBallStatus().getPos().getX());
-                circle.setCenterY(ballModel.getBallStatus().getPos().getY());
+                circle.setCenterX(ballModel.getStatus().getPos().getX());
+                circle.setCenterY(ballModel.getStatus().getPos().getY());
             }
         };
         timer.start();
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Test Physic Engine");
+        primaryStage.setTitle("2D Physical simulation Engine");
         primaryStage.setWidth(500);
         primaryStage.setHeight(500);
         primaryStage.show();
@@ -113,5 +225,6 @@ public class Main extends Application {
     }
 
 }
+*/
 
 

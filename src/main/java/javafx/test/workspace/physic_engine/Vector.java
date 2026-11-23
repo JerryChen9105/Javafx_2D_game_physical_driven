@@ -21,6 +21,14 @@ public class Vector {
         setLen();
     }
 
+    public static Vector copy(Vector pos) {
+        return new Vector(pos.getX(), pos.getY());
+    }
+
+    public static Vector of(int x, int y) {
+        return new Vector(x, y);
+    }
+
 
 
     // identity methods
@@ -84,10 +92,6 @@ public class Vector {
         this.setXY(pos.getX(), pos.getY());
     }
 
-    public Vector copy(Vector pos) {
-        return new Vector(pos.getX(), pos.getY());
-    }
-
 
 
     // vector operation
@@ -107,5 +111,15 @@ public class Vector {
         if (len == 0) return new Vector(0, 0);
         return new Vector(this.x / len, this.y / len);
     }
+
+    public double dotProduct(Vector v) {
+        return x * v.getX() + y * v.getY();
+    }
+
+    public double crossProduct(Vector v) {
+        return x * v.getY() - y * v.getX();
+    }
 }
+
+
 
