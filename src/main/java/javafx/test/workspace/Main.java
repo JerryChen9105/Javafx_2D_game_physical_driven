@@ -1,6 +1,5 @@
 package javafx.test.workspace;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,11 +7,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.test.workspace.gametick_system.GameTickSystem;
 import javafx.test.workspace.physic_model.entity.Ball;
 import javafx.test.workspace.physic_model.entity.Entity;
 import javafx.test.workspace.physic_model.obstacle.Boundary;
 import javafx.test.workspace.physic_engine.PhysicalStatus;
-import javafx.test.workspace.physic_engine.Vector;
+import javafx.test.workspace.math_object.Vector;
 
 
 
@@ -37,25 +37,25 @@ public class Main extends Application {
                 0.5,
                 0.55
         );
-        Boundary boundary = new Boundary(100, 900, 50, 700);
+        Boundary boundary = new Boundary(50, 1400, 20, 750);
         Entity ballModel = new Ball(physicalStatus, boundary, 15);
 
 
-        Rectangle lb = new Rectangle(10, 1000);
+        Rectangle lb = new Rectangle(10, 2000);
         lb.setFill(Paint.valueOf("black"));
-        lb.setX(100 - 10);
+        lb.setX(boundary.getLeftBound() - 10);
 
-        Rectangle rb = new Rectangle(10, 1000);
+        Rectangle rb = new Rectangle(10, 2000);
         rb.setFill(Paint.valueOf("black"));
-        rb.setX(900);
+        rb.setX(boundary.getRightBound());
 
-        Rectangle tb = new Rectangle(1200, 10);
+        Rectangle tb = new Rectangle(2000, 10);
         tb.setFill(Paint.valueOf("black"));
-        tb.setY(50 - 10);
+        tb.setY(boundary.getTopBound() - 10);
 
-        Rectangle bb = new Rectangle(1200, 10);
+        Rectangle bb = new Rectangle(2000, 10);
         bb.setFill(Paint.valueOf("black"));
-        bb.setY(700);
+        bb.setY(boundary.getBottomBound());
 
 
         primaryRoot.getChildren().addAll(

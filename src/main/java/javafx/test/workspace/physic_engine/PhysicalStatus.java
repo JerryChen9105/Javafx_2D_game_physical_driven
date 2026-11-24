@@ -1,5 +1,8 @@
 package javafx.test.workspace.physic_engine;
 
+import javafx.test.workspace.math_object.Vector;
+import javafx.test.workspace.numerical_method.NumericalMethod;
+
 public class PhysicalStatus {
 
     // variables
@@ -7,6 +10,10 @@ public class PhysicalStatus {
     private Vector pos, velocity, acceleration;
     private double friction;
     private double restitution;
+
+
+    // numerical method
+    NumericalMethod<Vector> numericalMethod;
 
 
 
@@ -40,7 +47,7 @@ public class PhysicalStatus {
         return acceleration;
     }
 
-    public double getFrictionCoefficient() {
+    public double getFriction() {
         return friction;
     }
 
@@ -67,7 +74,7 @@ public class PhysicalStatus {
         this.acceleration = acceleration;
     }
 
-    public void setFrictionCoefficient(double friction) {
+    public void setFriction(double friction) {
         this.friction = friction;
     }
 
@@ -87,7 +94,7 @@ public class PhysicalStatus {
 
     public void applyFriction() {
         if (this.velocity.getLen() > 0) {
-            Vector oppositeDirection = this.velocity.normalize().multiply(-1);
+            Vector oppositeDirection = this.velocity.normalize().multiply(-1.0);
 
             double frictionMagnitude = this.friction * this.mass * PhysicsConstant.g;
             Vector frictionForce = oppositeDirection.multiply(frictionMagnitude);
@@ -105,17 +112,17 @@ public class PhysicalStatus {
     public void update(double deltaTime) {
         applyFriction();
 
-        Vector deltaVelocity = this.acceleration.multiply(deltaTime);
-        this.velocity = this.velocity.add(deltaVelocity);
+        Vector deltaVelocity = numericalMethod.estimateIncrement(acceleration, deltaTime);
+        velocity = velocity.add(deltaVelocity);
 
-        if (this.velocity.getLen() < 0.01) {
-            this.velocity.setXY(0, 0);
+        if (velocity.getLen() < 0.01) {
+            velocity.setXY(0, 0);
         }
 
-        Vector deltaPos = this.velocity.multiply(deltaTime);
-        this.pos = this.pos.add(deltaPos);
+        Vector deltaPos = numericalMethod.estimateIncrement(velocity, deltaTime);
+        pos = pos.add(deltaPos);
 
-        this.acceleration.setXY(0, 0);
+        acceleration.setXY(0, 0);
     }
 }
 

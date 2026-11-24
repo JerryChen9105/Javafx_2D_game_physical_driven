@@ -1,7 +1,7 @@
 package javafx.test.workspace.physic_model.entity;
 
 import javafx.test.workspace.physic_engine.PhysicalStatus;
-import javafx.test.workspace.physic_engine.Vector;
+import javafx.test.workspace.math_object.Vector;
 import javafx.test.workspace.physic_model.obstacle.Boundary;
 
 public class Ball extends Entity {
